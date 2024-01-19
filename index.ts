@@ -64,11 +64,11 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (event.code === "ArrowUp") {
-    camera.pos[2] += 2000;
+    camera.pos[2] += 2;
   }
 
   if (event.code === "ArrowDown") {
-    camera.pos[2] -= 2000;
+    camera.pos[2] -= 2;
   }
   // do something
 

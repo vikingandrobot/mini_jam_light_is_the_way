@@ -4,6 +4,9 @@ import { Renderer } from "@ui/renderer";
 import { draw as drawWizard } from "@ui/wizard";
 import { Size } from "@model";
 
+const DELTA_T = 0.04; // 1/25 second
+const DELTA_T_IN_MS = 40;
+
 export class Game {
   private canvasNewSize: Size | null = null;
   private ctx: CanvasRenderingContext2D;
@@ -75,7 +78,7 @@ export class Game {
 
     setInterval(() => {
       this.tick();
-    }, 25);
+    }, DELTA_T_IN_MS);
   }
 
   private requestCanvasResize = () => {

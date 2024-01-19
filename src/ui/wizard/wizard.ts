@@ -19,7 +19,7 @@ export function draw(
     return;
   }
 
-  const verticalHalfSize = Math.floor(
+  const verticalSize = Math.floor(
     distanceFromTwoPoints(
       [posInViewport[0], posInViewport[1]],
       [posInViewportTopOfCharacter[0], posInViewportTopOfCharacter[1]]
@@ -33,9 +33,9 @@ export function draw(
 
   // BODY
   ctx.beginPath();
-  ctx.moveTo(0, -verticalHalfSize / 2);
-  ctx.lineTo(Math.floor(verticalHalfSize / 2), Math.floor(verticalHalfSize));
-  ctx.lineTo(-Math.floor(verticalHalfSize / 2), Math.floor(verticalHalfSize));
+  ctx.moveTo(0, -Math.floor(verticalSize * 0.75));
+  ctx.lineTo(Math.floor(verticalSize / 4), 0);
+  ctx.lineTo(-Math.floor(verticalSize / 4), 0);
   ctx.fillStyle = "#453157";
   ctx.strokeStyle = "white";
   ctx.closePath();
@@ -44,9 +44,9 @@ export function draw(
 
   // HEAD
   ctx.beginPath();
-  ctx.moveTo(0, -verticalHalfSize / 2);
-  ctx.lineTo(Math.floor(verticalHalfSize / 3), -Math.floor(verticalHalfSize));
-  ctx.lineTo(-Math.floor(verticalHalfSize / 3), -Math.floor(verticalHalfSize));
+  ctx.moveTo(0, -Math.floor(verticalSize * 0.75));
+  ctx.lineTo(Math.floor(verticalSize * 0.2), -verticalSize);
+  ctx.lineTo(-Math.floor(verticalSize * 0.2), -verticalSize);
   ctx.fillStyle = "#453157";
   ctx.strokeStyle = "white";
   ctx.closePath();
@@ -55,23 +55,14 @@ export function draw(
 
   // HAT
   ctx.beginPath();
-  ctx.moveTo(
-    -Math.floor(verticalHalfSize / 2),
-    -Math.floor(verticalHalfSize * 2.5)
-  );
-  ctx.lineTo(
-    Math.floor(verticalHalfSize * 0.4),
-    -Math.floor(verticalHalfSize * 1.2)
-  );
-  ctx.lineTo(Math.floor(verticalHalfSize * 0.8), -Math.floor(verticalHalfSize));
-  ctx.lineTo(
-    -Math.floor(verticalHalfSize * 0.8),
-    -Math.floor(verticalHalfSize)
-  );
-  ctx.lineTo(
-    -Math.floor(verticalHalfSize * 0.4),
-    -Math.floor(verticalHalfSize * 1.2)
-  );
+  ctx.moveTo(-Math.floor(verticalSize * 0.4), -Math.floor(verticalSize * 1.8));
+  ctx.lineTo(Math.floor(verticalSize * 0.1), -Math.floor(verticalSize * 1.3));
+  ctx.lineTo(Math.floor(verticalSize * 0.2), -Math.floor(verticalSize * 1.2));
+  ctx.lineTo(Math.floor(verticalSize * 0.2), -Math.floor(verticalSize * 1.1));
+  ctx.lineTo(Math.floor(verticalSize * 0.6), -Math.floor(verticalSize));
+  ctx.lineTo(-Math.floor(verticalSize * 0.6), -Math.floor(verticalSize));
+  ctx.lineTo(-Math.floor(verticalSize * 0.2), -Math.floor(verticalSize * 1.1));
+  ctx.lineTo(-Math.floor(verticalSize * 0.2), -Math.floor(verticalSize * 1.3));
   ctx.fillStyle = "#453157";
   ctx.strokeStyle = "white";
   ctx.closePath();
@@ -80,21 +71,21 @@ export function draw(
 
   // STAFF HALO
   const haloGradient = ctx.createRadialGradient(
-    Math.ceil(verticalHalfSize / 1.5) + Math.floor(verticalHalfSize / 12),
-    -Math.floor(2 * verticalHalfSize),
+    Math.ceil(verticalSize / 1.5),
+    -Math.floor(2 * verticalSize),
     0,
-    Math.ceil(verticalHalfSize / 1.5) + Math.floor(verticalHalfSize / 12),
-    -Math.floor(2 * verticalHalfSize),
-    Math.floor(verticalHalfSize / 2)
+    Math.ceil(verticalSize / 1.5),
+    -Math.floor(2 * verticalSize),
+    Math.floor(verticalSize / 2)
   );
   haloGradient.addColorStop(0, "white");
   haloGradient.addColorStop(1, "rgba(255, 255, 255, 0)");
 
   ctx.beginPath();
   ctx.arc(
-    Math.ceil(verticalHalfSize / 1.5) + Math.floor(verticalHalfSize / 12),
-    -Math.floor(2 * verticalHalfSize),
-    Math.floor(verticalHalfSize / 2),
+    Math.ceil(verticalSize / 1.5),
+    -Math.floor(2 * verticalSize),
+    Math.floor(verticalSize / 2),
     0,
     360
   );
@@ -102,33 +93,29 @@ export function draw(
   ctx.fill();
 
   // STAFF
-
   ctx.beginPath();
-  ctx.fillStyle = "white";
-  ctx.rect(
-    Math.ceil(verticalHalfSize / 1.5),
-    -Math.floor(2 * verticalHalfSize),
-    Math.floor(verticalHalfSize / 6),
-    Math.floor(verticalHalfSize * 3)
-  );
-  ctx.fill();
+  ctx.strokeStyle = "white";
+  ctx.moveTo(Math.ceil(verticalSize / 1.5), -Math.floor(2 * verticalSize));
+  ctx.lineTo(Math.ceil(verticalSize / 1.5), 0);
+  ctx.lineWidth = Math.ceil(verticalSize * 0.08);
+  ctx.stroke();
 
   const stoneGradient = ctx.createRadialGradient(
-    Math.ceil(verticalHalfSize / 1.5) + Math.floor(verticalHalfSize / 12),
-    -Math.floor(2 * verticalHalfSize),
+    Math.ceil(verticalSize / 1.5),
+    -Math.floor(2 * verticalSize),
     0,
-    Math.ceil(verticalHalfSize / 1.5) + Math.floor(verticalHalfSize / 12),
-    -Math.floor(2 * verticalHalfSize),
-    Math.floor(verticalHalfSize / 5)
+    Math.ceil(verticalSize / 1.5),
+    -Math.floor(2 * verticalSize),
+    Math.floor(verticalSize / 5)
   );
   stoneGradient.addColorStop(0, "#453157");
   stoneGradient.addColorStop(1, "white");
 
   ctx.beginPath();
   ctx.arc(
-    Math.ceil(verticalHalfSize / 1.5) + Math.floor(verticalHalfSize / 12),
-    -Math.floor(2 * verticalHalfSize),
-    Math.floor(verticalHalfSize / 5),
+    Math.ceil(verticalSize / 1.5),
+    -Math.floor(2 * verticalSize),
+    Math.floor(verticalSize / 5),
     0,
     360
   );

@@ -5,3 +5,7 @@ export type BasicRenderFunction<T> = (
   renderer: Renderer,
   element: T
 ) => void;
+
+export interface EntityRenderer<T> {
+  render: (ctx: CanvasRenderingContext2D, renderer: Renderer) => void;
+}

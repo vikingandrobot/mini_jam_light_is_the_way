@@ -3,6 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
+      "@animation": ["src/animation/index.ts"],
+      "@animation/*": ["src/animation/*"],
       "@camera": ["src/camera/index.ts"],
       "@camera/*": ["src/camera/*"],
       "@game": ["src/game/index.ts"],

@@ -9,6 +9,8 @@
       "@camera/*": ["src/camera/*"],
       "@game": ["src/game/index.ts"],
       "@game/*": ["src/game/*"],
+      "@inputs": ["src/inputs/index.ts"],
+      "@inputs/*": ["src/inputs/*"],
       "@model": ["src/model/index.ts"],
       "@model/*": ["src/model/*"],
       "@ui/*": ["src/ui/*"]

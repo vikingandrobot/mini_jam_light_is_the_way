@@ -3,6 +3,7 @@ import { HomeScreen } from "./home-screen";
 import { Renderer } from "@ui/renderer";
 import { draw as drawWizard } from "@ui/wizard";
 import { Size } from "@model";
+import { InputsManager } from "@inputs/inputs-manager";
 
 const DELTA_T = 0.04; // 1/25 second
 const DELTA_T_IN_MS = 40;
@@ -12,6 +13,7 @@ export class Game {
   private ctx: CanvasRenderingContext2D;
   private camera: Camera;
   private homeScreen: HomeScreen;
+  private inputsManager: InputsManager = new InputsManager();
 
   constructor(private canvas: HTMLCanvasElement) {
     this.camera = new Camera({
@@ -24,7 +26,7 @@ export class Game {
 
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     const renderer = new Renderer(this.camera);
-    this.homeScreen = new HomeScreen(this.ctx, renderer);
+    this.homeScreen = new HomeScreen(this.ctx, renderer, this.inputsManager);
     this.homeScreen.init();
   }
 
@@ -34,8 +36,6 @@ export class Game {
       this.canvasNewSize = null;
     }
 
-    this.homeScreen.logic();
-
     this.ctx.clearRect(
       0,
       0,
@@ -43,7 +43,10 @@ export class Game {
       this.camera.viewportSize[1]
     );
 
-    this.homeScreen.render();
+    if (!this.homeScreen.isDone()) {
+      this.homeScreen.logic();
+      this.homeScreen.render();
+    }
   }
 
   init() {
@@ -51,30 +54,7 @@ export class Game {
 
     this.requestCanvasResize();
 
-    document.addEventListener("keydown", (event) => {
-      if (event.isComposing || event.keyCode === 229) {
-        return;
-      }
-
-      if (event.code === "ArrowRight") {
-        this.camera.zRotation += Math.PI / 64;
-      }
-
-      if (event.code === "ArrowLeft") {
-        this.camera.zRotation -= Math.PI / 64;
-      }
-
-      if (event.code === "ArrowUp") {
-        this.camera.pos[1] += 0.5;
-      }
-
-      if (event.code === "ArrowDown") {
-        this.camera.pos[1] -= 0.5;
-      }
-      // do something
-
-      console.log(event.code);
-    });
+    this.inputsManager.init();
 
     setInterval(() => {
       this.tick();

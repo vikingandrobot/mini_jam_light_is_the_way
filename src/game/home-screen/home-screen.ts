@@ -6,6 +6,7 @@ import { Renderer } from "@ui/renderer";
 import { Position } from "@model";
 import { LightOrb, makeLightOrb } from "@model/light-orb";
 import { BasicRenderFunction } from "@ui/types";
+import { Inputs, InputsManager } from "@inputs";
 
 const GAME_TITLE = "A Light in the Dark";
 const START_LABEL = "Press the [SPACE] key to start";
@@ -33,10 +34,17 @@ export class HomeScreen {
   private orbDirection = 1;
   private orbRenderer = new LightOrbRenderer(this.orb);
 
+  private done: boolean = false;
+
   constructor(
     private ctx: CanvasRenderingContext2D,
-    private renderer: Renderer
+    private renderer: Renderer,
+    private inputsManager: InputsManager
   ) {}
+
+  isDone(): boolean {
+    return this.done;
+  }
 
   init() {
     this.renderer.getCamera().pos = [0, 20, 0];
@@ -68,6 +76,15 @@ export class HomeScreen {
       this.renderer
         .getCamera()
         .centerCamera([cameraPos[0], cameraPos[1] - 0.15, cameraPos[2]]);
+    }
+
+    /**
+     * For now we use this check to decide if the player can start the game
+     */
+    if (cameraPos[1] <= 5) {
+      if (this.inputsManager.isInputEnabled(Inputs.Space)) {
+        this.done = true;
+      }
     }
   }
 }

@@ -36,6 +36,16 @@ export function toLeftHanded(point: MatrixPoint): MatrixPoint {
   return [x, y, z];
 }
 
+interface CameraOptions {
+  viewportWidth: number;
+  canvas: HTMLCanvasElement;
+  pos: Position;
+  size: Size;
+  focalLength?: number;
+  zRotation?: number;
+  xRotation?: number;
+}
+
 export class Camera {
   pos: Position;
   size: Size;
@@ -43,6 +53,8 @@ export class Camera {
 
   // Rotation around the z axis
   zRotation: number = 0;
+  // Rotation around the x axis
+  xRotation: number = (3 * Math.PI) / 2;
 
   get viewportSize(): Size {
     const ratio = this.size[1] / this.size[0];
@@ -52,16 +64,22 @@ export class Camera {
   private canvas: HTMLCanvasElement;
   private viewportWidth: number;
 
-  constructor(
-    pos: Position,
-    size: Size,
-    viewportWidth: number,
-    canvas: HTMLCanvasElement
-  ) {
+  constructor({
+    pos,
+    size,
+    viewportWidth,
+    canvas,
+    focalLength,
+    zRotation,
+    xRotation,
+  }: CameraOptions) {
     this.pos = [...pos];
     this.size = [...size];
     this.viewportWidth = viewportWidth;
     this.canvas = canvas;
+    this.focalLength = focalLength ?? 20;
+    this.zRotation = zRotation ?? 0;
+    this.xRotation = xRotation ?? 0;
   }
 
   setViewportWidth(width: number) {

@@ -1,7 +1,8 @@
 import { Size } from "@model/types";
 import { Wizard, makeWizard } from "@model/wizard";
-import { draw as drawPlanet } from "@ui/wizard";
+import { draw as drawWizard } from "@ui/wizard";
 import { Camera, Renderer } from "@ui/renderer";
+import { draw as drawSky } from "@ui/sky";
 
 const DELTA_T = 0.04; // 1/25 second
 
@@ -14,7 +15,13 @@ const ctx: CanvasRenderingContext2D = canvas.getContext(
   "2d"
 ) as CanvasRenderingContext2D;
 
-const camera: Camera = new Camera([0, 0, 0], [20, 10], 600, canvas);
+const camera: Camera = new Camera({
+  pos: [0, 0, 0],
+  size: [20, 10],
+  viewportWidth: 600,
+  canvas,
+  xRotation: (6 * Math.PI) / 4,
+});
 
 const renderer = new Renderer(camera);
 
@@ -28,11 +35,13 @@ function render() {
 
   ctx.clearRect(0, 0, camera.viewportSize[0], camera.viewportSize[1]);
 
+  drawSky(ctx, renderer);
+
   const objects = [wizard];
   const sortedObject = objects.sort((a, b) => b.pos[2] - a.pos[2]);
 
   for (let i = 0; i < sortedObject.length; ++i) {
-    drawPlanet(ctx, renderer, sortedObject[i]);
+    drawWizard(ctx, renderer, sortedObject[i]);
   }
 }
 
@@ -64,11 +73,11 @@ document.addEventListener("keydown", (event) => {
   }
 
   if (event.code === "ArrowUp") {
-    camera.pos[2] += 2;
+    camera.pos[1] += 0.5;
   }
 
   if (event.code === "ArrowDown") {
-    camera.pos[2] -= 2;
+    camera.pos[1] -= 0.5;
   }
   // do something
 

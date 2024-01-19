@@ -21,11 +21,18 @@ export class Renderer {
 
   getPositionFromRealWordToPixels(pos: Position): Position | null {
     const zAngle = this.camera.zRotation;
+    const xAngle = this.camera.xRotation;
 
-    const rotationMatrix: Matrix3D = [
+    const zAxisRotation: Matrix3D = [
       [Math.cos(zAngle), -Math.sin(zAngle), 0],
       [Math.sin(zAngle), Math.cos(zAngle), 0],
       [0, 0, 1],
+    ];
+
+    const xAxisRotation: Matrix3D = [
+      [1, 0, 0],
+      [0, Math.cos(xAngle), -Math.sin(xAngle)],
+      [0, Math.sin(xAngle), Math.cos(xAngle)],
     ];
 
     const f = this.camera.focalLength;
@@ -40,9 +47,13 @@ export class Renderer {
       pos[1] - yc,
       pos[2] - zc,
     ].map((a) => [a]) as MatrixPoint;
-    const rotatedMatrixPoint = multiply(
-      rotationMatrix,
+    let rotatedMatrixPoint = multiply(
+      zAxisRotation,
       toRightHanded(matrixPoint)
+    );
+    rotatedMatrixPoint = multiply(
+      xAxisRotation,
+      toRightHanded(rotatedMatrixPoint)
     );
     const [x, y, z] = toLeftHanded(rotatedMatrixPoint).map((a) => a[0]);
 
@@ -54,7 +65,8 @@ export class Renderer {
     const ya = cameraCenterY - (f * y) / (z + f);
 
     const renderX = (xa / cameraCenterX) * viewportCenterX;
-    const renderY = (ya / cameraCenterY) * viewportCenterY;
+    const renderY =
+      this.camera.viewportSize[1] - (ya / cameraCenterY) * viewportCenterY;
 
     if (
       renderX < -1 * this.camera.viewportSize[0] ||

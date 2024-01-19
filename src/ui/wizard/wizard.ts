@@ -1,5 +1,6 @@
 import { Wizard } from "@model/wizard";
 import { Renderer, distanceFromTwoPoints } from "../renderer/renderer";
+import { drawStaff } from "./staff";
 
 export function draw(
   ctx: CanvasRenderingContext2D,
@@ -69,58 +70,8 @@ export function draw(
   ctx.stroke();
   ctx.fill();
 
-  // STAFF HALO
-  const haloGradient = ctx.createRadialGradient(
-    Math.ceil(verticalSize / 1.5),
-    -Math.floor(2 * verticalSize),
-    0,
-    Math.ceil(verticalSize / 1.5),
-    -Math.floor(2 * verticalSize),
-    Math.floor(verticalSize / 2)
-  );
-  haloGradient.addColorStop(0, "white");
-  haloGradient.addColorStop(1, "rgba(255, 255, 255, 0)");
-
-  ctx.beginPath();
-  ctx.arc(
-    Math.ceil(verticalSize / 1.5),
-    -Math.floor(2 * verticalSize),
-    Math.floor(verticalSize / 2),
-    0,
-    360
-  );
-  ctx.fillStyle = haloGradient;
-  ctx.fill();
-
-  // STAFF
-  ctx.beginPath();
-  ctx.strokeStyle = "white";
-  ctx.moveTo(Math.ceil(verticalSize / 1.5), -Math.floor(2 * verticalSize));
-  ctx.lineTo(Math.ceil(verticalSize / 1.5), 0);
-  ctx.lineWidth = Math.ceil(verticalSize * 0.08);
-  ctx.stroke();
-
-  const stoneGradient = ctx.createRadialGradient(
-    Math.ceil(verticalSize / 1.5),
-    -Math.floor(2 * verticalSize),
-    0,
-    Math.ceil(verticalSize / 1.5),
-    -Math.floor(2 * verticalSize),
-    Math.floor(verticalSize / 5)
-  );
-  stoneGradient.addColorStop(0, "#453157");
-  stoneGradient.addColorStop(1, "white");
-
-  ctx.beginPath();
-  ctx.arc(
-    Math.ceil(verticalSize / 1.5),
-    -Math.floor(2 * verticalSize),
-    Math.floor(verticalSize / 5),
-    0,
-    360
-  );
-  ctx.fillStyle = stoneGradient;
-  ctx.fill();
+  // Staff
+  drawStaff(ctx, renderer, { wizard, verticalSize });
 
   ctx.restore();
 }

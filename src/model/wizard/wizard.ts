@@ -1,11 +1,21 @@
 import { Position } from "../types";
 
-export interface Wizard {
-  pos: Position;
+export class Wizard {
+  public pos: Position;
   /**
    * Meters
    */
-  size: number;
+  public size: number;
+
+  public aimAngle: number = Math.PI / 2;
+
+  constructor({ pos, size }: MakeWizardOptions) {
+    (this.pos = [...pos]), (this.size = size);
+  }
+
+  rotateAim(byAngle: number) {
+    this.aimAngle += byAngle;
+  }
 }
 
 export interface MakeWizardOptions {
@@ -13,9 +23,6 @@ export interface MakeWizardOptions {
   size: number;
 }
 
-export function makeWizard({ pos, size }: MakeWizardOptions): Wizard {
-  return {
-    pos: [...pos],
-    size,
-  };
+export function makeWizard(options: MakeWizardOptions): Wizard {
+  return new Wizard(options);
 }

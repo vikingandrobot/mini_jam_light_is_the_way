@@ -6,7 +6,7 @@ import { Renderer } from "@ui/renderer";
 import { Position } from "@model";
 import { LightOrb, makeLightOrb } from "@model/light-orb";
 import { BasicRenderFunction } from "@ui/types";
-import { Inputs, InputsManager } from "@inputs";
+import { Input, InputsManager } from "@inputs";
 
 const GAME_TITLE = "A Light in the Dark";
 const START_LABEL = "Press the [SPACE] key to start";
@@ -82,7 +82,7 @@ export class HomeScreen {
      * For now we use this check to decide if the player can start the game
      */
     if (cameraPos[1] <= 5) {
-      if (this.inputsManager.isInputEnabled(Inputs.Space)) {
+      if (this.inputsManager.isInputEnabled(Input.Space)) {
         this.done = true;
       }
     }

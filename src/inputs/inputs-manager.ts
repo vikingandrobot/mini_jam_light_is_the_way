@@ -1,4 +1,4 @@
-export enum Inputs {
+export enum Input {
   "KeyA" = "KeyA",
   "KeyW" = "KeyW",
   "KeyS" = "KeyS",
@@ -11,19 +11,19 @@ export enum Inputs {
 }
 
 export class InputsManager {
-  private inputs: Record<Inputs, boolean> = {
-    [Inputs.KeyA]: false,
-    [Inputs.KeyW]: false,
-    [Inputs.KeyS]: false,
-    [Inputs.KeyD]: false,
-    [Inputs.ArrowDown]: false,
-    [Inputs.ArrowLeft]: false,
-    [Inputs.ArrowRight]: false,
-    [Inputs.ArrowUp]: false,
-    [Inputs.Space]: false,
+  private inputs: Record<Input, boolean> = {
+    [Input.KeyA]: false,
+    [Input.KeyW]: false,
+    [Input.KeyS]: false,
+    [Input.KeyD]: false,
+    [Input.ArrowDown]: false,
+    [Input.ArrowLeft]: false,
+    [Input.ArrowRight]: false,
+    [Input.ArrowUp]: false,
+    [Input.Space]: false,
   };
 
-  isInputEnabled(inputKey: Inputs): boolean {
+  isInputEnabled(inputKey: Input): boolean {
     return !!this.inputs[inputKey];
   }
 
@@ -44,39 +44,39 @@ export class InputsManager {
 
       switch (event.code) {
         case "ArrowRight":
-          this.inputs[Inputs.ArrowRight] = true;
+          this.inputs[Input.ArrowRight] = true;
           break;
 
         case "ArrowLeft":
-          this.inputs[Inputs.ArrowLeft] = true;
+          this.inputs[Input.ArrowLeft] = true;
           break;
 
         case "ArrowUp":
-          this.inputs[Inputs.ArrowUp] = true;
+          this.inputs[Input.ArrowUp] = true;
           break;
 
         case "ArrowDown":
-          this.inputs[Inputs.ArrowDown] = true;
+          this.inputs[Input.ArrowDown] = true;
           break;
 
         case "Space":
-          this.inputs[Inputs.Space] = true;
+          this.inputs[Input.Space] = true;
           break;
 
         case "KeyA":
-          this.inputs[Inputs.KeyA] = true;
+          this.inputs[Input.KeyA] = true;
           break;
 
         case "KeyW":
-          this.inputs[Inputs.KeyW] = true;
+          this.inputs[Input.KeyW] = true;
           break;
 
         case "KeyD":
-          this.inputs[Inputs.KeyD] = true;
+          this.inputs[Input.KeyD] = true;
           break;
 
         case "KeyS":
-          this.inputs[Inputs.KeyS] = true;
+          this.inputs[Input.KeyS] = true;
           break;
       }
       console.log(event.code);
@@ -91,39 +91,39 @@ export class InputsManager {
 
       switch (event.code) {
         case "ArrowRight":
-          this.inputs[Inputs.ArrowRight] = false;
+          this.inputs[Input.ArrowRight] = false;
           break;
 
         case "ArrowLeft":
-          this.inputs[Inputs.ArrowLeft] = false;
+          this.inputs[Input.ArrowLeft] = false;
           break;
 
         case "ArrowUp":
-          this.inputs[Inputs.ArrowUp] = false;
+          this.inputs[Input.ArrowUp] = false;
           break;
 
         case "ArrowDown":
-          this.inputs[Inputs.ArrowDown] = false;
+          this.inputs[Input.ArrowDown] = false;
           break;
 
         case "Space":
-          this.inputs[Inputs.Space] = false;
+          this.inputs[Input.Space] = false;
           break;
 
         case "KeyA":
-          this.inputs[Inputs.KeyA] = false;
+          this.inputs[Input.KeyA] = false;
           break;
 
         case "KeyW":
-          this.inputs[Inputs.KeyW] = false;
+          this.inputs[Input.KeyW] = false;
           break;
 
         case "KeyD":
-          this.inputs[Inputs.KeyD] = false;
+          this.inputs[Input.KeyD] = false;
           break;
 
         case "KeyS":
-          this.inputs[Inputs.KeyS] = false;
+          this.inputs[Input.KeyS] = false;
           break;
       }
       console.log(event.code);

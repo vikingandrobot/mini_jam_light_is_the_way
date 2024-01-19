@@ -10,7 +10,17 @@ export function draw(ctx: CanvasRenderingContext2D, renderer: Renderer) {
     return;
   }
 
-  const [, y] = skyCenterPos;
+  const [x, y] = skyCenterPos;
+  const viewPortCenterX = Math.ceil(renderer.getCamera().viewportSize[0] / 2);
+
+  const skyGradient = ctx.createLinearGradient(
+    viewPortCenterX,
+    0,
+    viewPortCenterX,
+    y
+  );
+  skyGradient.addColorStop(0, "black");
+  skyGradient.addColorStop(1, "#223957");
 
   ctx.beginPath();
   ctx.rect(
@@ -19,7 +29,7 @@ export function draw(ctx: CanvasRenderingContext2D, renderer: Renderer) {
     renderer.getCamera().viewportSize[0],
     -renderer.getCamera().viewportSize[1]
   );
-  ctx.fillStyle = "#223957";
+  ctx.fillStyle = skyGradient;
   ctx.fill();
   ctx.closePath();
 }

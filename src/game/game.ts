@@ -22,6 +22,7 @@ export class Game {
     this.ctx = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     const renderer = new Renderer(this.camera);
     this.homeScreen = new HomeScreen(this.ctx, renderer);
+    this.homeScreen.init();
   }
 
   tick() {

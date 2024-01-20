@@ -7,8 +7,8 @@ import { InputsManager } from "@inputs/inputs-manager";
 import { Level, LevelId } from "./levels/types";
 import { FirstLightLevel } from "./levels/first-light.ts";
 
-const DELTA_T = 0.04; // 1/25 second
-const DELTA_T_IN_MS = 40;
+const DELTA_T = 0.0166; // 1/25 second
+const DELTA_T_IN_MS = 16.6;
 
 export class Game {
   private canvasNewSize: Size | null = null;
@@ -54,7 +54,7 @@ export class Game {
     }
 
     if (this.currentLevel) {
-      this.currentLevel.logic();
+      this.currentLevel.logic(DELTA_T_IN_MS);
     } else {
       this.homeScreen.logic();
     }

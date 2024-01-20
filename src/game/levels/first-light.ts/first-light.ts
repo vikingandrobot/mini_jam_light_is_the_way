@@ -1,14 +1,17 @@
 import { Renderer } from "@ui/renderer";
 import { Level, LevelId } from "../types";
 import { Input, InputsManager } from "@inputs/inputs-manager";
-import { Wizard, makeWizard } from "@model/wizard";
+import { Wizard, makeWizard, wizardLogic } from "@model/wizard";
 import { draw as drawWizard } from "@ui/wizard";
 import { draw as drawSky } from "@ui/sky";
 import { BasicRenderFunction } from "@ui/types";
 import { Position, Size } from "@model";
+import { SpellManager } from "src/spells";
 
 export class FirstLightLevel implements Level {
   public readonly id: LevelId = LevelId.FirstLight;
+
+  private spellManager: SpellManager;
 
   private wizard: Wizard = makeWizard({ pos: [0, 0, 20], size: 1.8 });
 
@@ -19,14 +22,19 @@ export class FirstLightLevel implements Level {
     private ctx: CanvasRenderingContext2D,
     private renderer: Renderer,
     private inputsManager: InputsManager
-  ) {}
+  ) {
+    this.spellManager = new SpellManager(inputsManager);
+  }
 
   init() {
     this.renderer.getCamera().centerCamera([0, 7, 0]);
   }
 
-  logic() {
+  logic(deltaTInMs: number) {
     this.actOnPlayerInputs();
+    wizardLogic(this.wizard, this.spellManager, deltaTInMs);
+
+    this.spellManager.clearCurrentSpell();
   }
 
   render() {
@@ -41,6 +49,8 @@ export class FirstLightLevel implements Level {
   }
 
   private actOnPlayerInputs() {
+    this.spellManager.collectSpells();
+
     if (this.inputsManager.isInputEnabled(Input.ArrowRight)) {
       this.wizard.rotateAim(-Math.PI / 40);
     }

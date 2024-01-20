@@ -8,7 +8,7 @@ export interface Level {
   /**
    * This increments the level physics and simulation by one frame
    */
-  logic(): void;
+  logic(deltaTInMs: number): void;
   /**
    * This renders the current state of the level
    */

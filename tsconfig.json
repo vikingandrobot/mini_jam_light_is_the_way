@@ -13,6 +13,8 @@
       "@inputs/*": ["src/inputs/*"],
       "@model": ["src/model/index.ts"],
       "@model/*": ["src/model/*"],
+      "@spells": ["src/spells/index.ts"],
+      "@spells/*": ["src/spells/*"],
       "@ui/*": ["src/ui/*"]
     },
     /* Visit https://aka.ms/tsconfig to read more about this file */

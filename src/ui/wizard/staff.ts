@@ -46,35 +46,37 @@ export const drawStaff: BasicRenderFunction<WizardDrawingContext> = (
   const stoneX = topStaffX;
   const stoneY = topStaffY;
 
-  const lightBeamRadius = 12 * verticalSize;
-  const lightBeamCenterX =
-    Math.round(Math.cos(wizard.aimAngle) * lightBeamRadius) + stoneX;
-  const lightBeamCenterY =
-    -Math.round(Math.sin(wizard.aimAngle) * lightBeamRadius) + stoneY;
+  if (wizard.currentSpell) {
+    const lightBeamRadius = 12 * verticalSize;
+    const lightBeamCenterX =
+      Math.round(Math.cos(wizard.aimAngle) * lightBeamRadius) + stoneX;
+    const lightBeamCenterY =
+      -Math.round(Math.sin(wizard.aimAngle) * lightBeamRadius) + stoneY;
 
-  const smallLightGradient = ctx.createLinearGradient(
-    stoneX,
-    stoneY,
-    lightBeamCenterX,
-    lightBeamCenterY
-  );
-  smallLightGradient.addColorStop(0, "rgba(255, 255, 255, 0.8");
-  smallLightGradient.addColorStop(1, "rgba(255, 255, 255, 0");
+    const smallLightGradient = ctx.createLinearGradient(
+      stoneX,
+      stoneY,
+      lightBeamCenterX,
+      lightBeamCenterY
+    );
+    smallLightGradient.addColorStop(0, "rgba(255, 255, 255, 0.8");
+    smallLightGradient.addColorStop(1, "rgba(255, 255, 255, 0");
 
-  ctx.save();
-  ctx.globalCompositeOperation = "lighter";
-  ctx.beginPath();
-  ctx.arc(
-    stoneX,
-    stoneY,
-    lightBeamRadius,
-    -wizard.aimAngle - Math.PI / 12,
-    -wizard.aimAngle + Math.PI / 12
-  );
-  ctx.lineTo(stoneX, stoneY);
-  ctx.fillStyle = smallLightGradient;
-  ctx.fill();
-  ctx.restore();
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.beginPath();
+    ctx.arc(
+      stoneX,
+      stoneY,
+      lightBeamRadius,
+      -wizard.aimAngle - Math.PI / 12,
+      -wizard.aimAngle + Math.PI / 12
+    );
+    ctx.lineTo(stoneX, stoneY);
+    ctx.fillStyle = smallLightGradient;
+    ctx.fill();
+    ctx.restore();
+  }
 
   // Staff stick
   ctx.beginPath();

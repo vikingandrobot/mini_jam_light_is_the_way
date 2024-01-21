@@ -7,6 +7,7 @@ import { ScreenId } from "./screens/types";
 import { LearningControlsScreen } from "./screens/learning-controls";
 import { clearAllText } from "@ui/text";
 import { NewSpellLearned } from "./screens/new-spell-learned";
+import { FirstEnemyScreen } from "./screens/first-enemy";
 
 export class FirstLightLevel implements Level {
   public readonly id: LevelId = LevelId.FirstLight;
@@ -30,8 +31,6 @@ export class FirstLightLevel implements Level {
 
   init() {
     this.renderer.getCamera().centerCamera([0, 7, 0]);
-    this.nextScreen();
-    this.nextScreen();
   }
 
   logic(deltaTInMs: number) {
@@ -71,6 +70,18 @@ export class FirstLightLevel implements Level {
           this.ctx,
           this.renderer,
           this.inputsManager
+        );
+        this.currentScreen.init();
+
+        break;
+      }
+
+      case ScreenId.NewSpellLearned: {
+        this.currentScreen = new FirstEnemyScreen(
+          this.ctx,
+          this.renderer,
+          this.inputsManager,
+          this.spellManager
         );
         this.currentScreen.init();
 

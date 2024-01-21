@@ -30,7 +30,7 @@ export class WakeUpScreen implements Level<ScreenId> {
 
   logic(_deltaTInMs: number): void {
     if (this.textIndex < STORY_TEXT.length) {
-      this.textIndex += 0.4;
+      this.textIndex += 1;
     }
 
     if (

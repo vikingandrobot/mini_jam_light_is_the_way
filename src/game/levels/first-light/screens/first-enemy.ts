@@ -1,126 +1,88 @@
 import { Level } from "@game/levels/types";
 import { ScreenId } from "./types";
 import { Renderer } from "@ui/renderer";
+import { draw as drawWizard } from "@ui/wizard";
 import { draw as drawSky } from "@ui/sky";
 import { BasicRenderFunction } from "@ui/types";
-import { Input, InputsManager } from "@inputs";
-import { Position, Size } from "@model";
-import { PowerWord } from "@spells";
-import { writeBottomInstructionText, writeTopInstructionText } from "@ui/text";
-import { drawLightRune } from "@ui/spells/light-rune";
 import { drawPowerWords } from "@ui/spells/power-words";
+import { Input, InputsManager } from "@inputs";
+import { Wizard, makeWizard, wizardLogic } from "@model/wizard";
+import { Position, Size } from "@model";
+import { PowerWord, SpellManager } from "@spells";
+import { writeBottomInstructionText, writeTopInstructionText } from "@ui/text";
+import { Minion, makeMinion, minionLogic } from "@model/minion";
+import { MinionRenderer } from "@ui/minion";
 
-const CONTROLS_TEXT =
-  "You learned the 'Wu' Rune for light. Spells are cast by composing runes. You have learned the 'Light Beam' spell. Use this spell to light your surroundings and hurt small Darkness monsters.";
+const OBJECTIVE_TEXT = "Kill the Darkness Minion coming at you.";
 
-const INSTRUCTION_TEST = "Press [SPACE] to continue";
-
-export class NewSpellLearned implements Level<ScreenId> {
-  id = ScreenId.NewSpellLearned;
+export class FirstEnemyScreen implements Level<ScreenId> {
+  id = ScreenId.FirstEnemy;
 
   private continue: boolean = false;
+
+  private wizard: Wizard = makeWizard({ pos: [0, 0, 20], size: 1.8 });
+  private minion: Minion = makeMinion([15, 0, 20], [4, 3]);
+  private minionRenderer: MinionRenderer = new MinionRenderer(this.minion);
 
   private groundPosition: Position = [0, 0, 20];
   private backgroundPosition: Position = [0, 0, 30];
 
-  private delay = 0;
-
   constructor(
     private ctx: CanvasRenderingContext2D,
     private renderer: Renderer,
-    private inputsManager: InputsManager
+    private inputsManager: InputsManager,
+    private spellManager: SpellManager
   ) {}
 
-  init() {}
+  init() {
+    this.spellManager.setKnownPowerWords({ [PowerWord.Light]: true });
+  }
 
   isDone(): boolean {
     return this.continue;
   }
 
   logic(deltaTInMs: number): void {
-    this.delay += 1;
     this.actOnPlayerInputs();
+    wizardLogic(this.wizard, this.spellManager, deltaTInMs);
+
+    if (!this.minion.isDead()) {
+      minionLogic(this.minion, { wizard: this.wizard, deltaTInMs });
+    }
+
+    this.spellManager.clearCurrentSpell();
   }
 
   render(): void {
     drawSky(this.ctx, this.renderer);
     drawBackground(this.ctx, this.renderer, this.backgroundPosition);
+    drawWizard(this.ctx, this.renderer, this.wizard);
+    if (!this.minion.isDead()) {
+      this.minionRenderer.render(this.ctx, this.renderer);
+    }
     drawGround(this.ctx, this.renderer, this.groundPosition);
+    drawPowerWords(this.ctx, this.renderer, {
+      numberOfSlots: 5,
+      currentSpellCast:
+        this.wizard.currentSpell?.magicWord ??
+        this.spellManager.getCurrentSpellCast(),
+      isCasted: !!this.wizard.currentSpell,
+    });
 
-    drawLightRuneAchievement(this.ctx, this.renderer, undefined);
-    drawLightSpellAchievement(this.ctx, this.renderer, undefined);
-
-    writeTopInstructionText(CONTROLS_TEXT);
-
-    writeBottomInstructionText(INSTRUCTION_TEST);
+    writeTopInstructionText(OBJECTIVE_TEXT);
   }
 
   private actOnPlayerInputs() {
-    if (this.inputsManager.isInputEnabled(Input.Space) && this.delay > 10) {
-      this.continue = true;
+    this.spellManager.collectSpells();
+
+    if (this.inputsManager.isInputEnabled(Input.ArrowRight)) {
+      this.wizard.rotateAim(-Math.PI / 40);
+    }
+    if (this.inputsManager.isInputEnabled(Input.ArrowLeft)) {
+      this.wizard.rotateAim(+Math.PI / 40);
     }
   }
 }
-
-const drawLightRuneAchievement: BasicRenderFunction<undefined> = (
-  ctx,
-  renderer
-) => {
-  const [vw, vh] = renderer.getCamera().viewportSize;
-
-  ctx.save();
-  ctx.translate(Math.round(vw / 2) + 20, Math.round(vh * 0.4));
-
-  ctx.beginPath();
-  ctx.rect(
-    -Math.round(vh * 0.035),
-    -Math.round(vh * 0.035),
-    Math.round(vh * 0.07),
-    Math.round(vh * 0.07)
-  );
-  ctx.fillStyle = "black";
-  ctx.fill();
-
-  drawLightRune(ctx, renderer, { size: Math.round(vh * 0.05) });
-  ctx.restore();
-
-  ctx.save();
-  ctx.translate(Math.round(vw / 2) - 20, Math.round(vh * 0.4) + 6);
-  ctx.textAlign = "right";
-  ctx.fillStyle = "white";
-  ctx.font = "22px Arial";
-  ctx.fillText("'Wu' rune:", 0, 0);
-
-  ctx.restore();
-};
-
-const drawLightSpellAchievement: BasicRenderFunction<undefined> = (
-  ctx,
-  renderer
-) => {
-  const [vw, vh] = renderer.getCamera().viewportSize;
-
-  ctx.save();
-  ctx.translate(Math.round(vw / 2) + 20, Math.round(vh * 0.6));
-
-  drawPowerWords(ctx, renderer, {
-    currentSpellCast: "L",
-    numberOfSlots: 5,
-    isCasted: false,
-    positionInViewport: [70, 15],
-    size: 30,
-  });
-  ctx.restore();
-
-  ctx.save();
-  ctx.translate(Math.round(vw / 2) - 20, Math.round(vh * 0.6) + 6);
-  ctx.textAlign = "right";
-  ctx.fillStyle = "white";
-  ctx.font = "22px Arial";
-  ctx.fillText("'Light beam' spell:", 0, 0);
-
-  ctx.restore();
-};
 
 const drawColumn: BasicRenderFunction<{ pos: Position; size: Size }> = (
   ctx,

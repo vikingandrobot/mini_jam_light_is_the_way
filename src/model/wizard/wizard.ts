@@ -12,6 +12,8 @@ export class Wizard {
 
   public aimAngle: number = Math.PI / 2;
 
+  aimAngleRange: number = Math.PI / 12;
+
   public currentSpell: Spell | null = null;
 
   constructor({ pos, size }: MakeWizardOptions) {

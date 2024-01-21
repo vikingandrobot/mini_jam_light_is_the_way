@@ -69,8 +69,8 @@ export const drawStaff: BasicRenderFunction<WizardDrawingContext> = (
       stoneX,
       stoneY,
       lightBeamRadius,
-      -wizard.aimAngle - Math.PI / 12,
-      -wizard.aimAngle + Math.PI / 12
+      -wizard.aimAngle - wizard.aimAngleRange,
+      -wizard.aimAngle + wizard.aimAngleRange
     );
     ctx.lineTo(stoneX, stoneY);
     ctx.fillStyle = smallLightGradient;

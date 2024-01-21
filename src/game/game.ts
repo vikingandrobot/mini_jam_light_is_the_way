@@ -98,8 +98,8 @@ export class Game {
       ),
     };
 
-    this.currentLevel = this.levels[LevelId.FirstLight] ?? null;
-    this.currentLevel?.init();
+    // this.currentLevel = this.levels[LevelId.FirstLight] ?? null;
+    // this.currentLevel?.init();
   }
 
   private isCurrentLevelDone(): boolean {

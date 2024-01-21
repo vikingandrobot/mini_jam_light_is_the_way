@@ -1,5 +1,5 @@
-export interface Level {
-  readonly id: LevelId;
+export interface Level<T = LevelId> {
+  readonly id: T;
   /**
    * This starts the level
    */

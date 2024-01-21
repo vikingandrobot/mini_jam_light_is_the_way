@@ -1,4 +1,4 @@
-import { Input, InputsManager } from "@inputs";
+import { Input, InputsManager } from "@inputs/inputs-manager";
 import { PowerWord, PowerWordRunes, MagicWord, SpellBook } from "./spells";
 
 type PowerWordInputs = Input.KeyA | Input.KeyD | Input.KeyS | Input.KeyW;
@@ -16,16 +16,14 @@ export class SpellManager {
   private currentMagicWord: MagicWord | null = null;
   private currentSpellCast: string = "";
 
+  private knownPowerWords: Partial<Record<PowerWord, boolean>> = {};
+
   private powerWordHistory: Record<PowerWord, boolean> = {
     [PowerWord.Light]: false,
     [PowerWord.Shield]: false,
     [PowerWord.Power]: false,
     [PowerWord.Focus]: false,
   } as const;
-
-  private spellBook: Record<MagicWord, boolean> = {
-    L: false,
-  };
 
   constructor(private inputsManager: InputsManager) {}
 
@@ -34,6 +32,11 @@ export class SpellManager {
      * Read the user inputs
      */
     Object.keys(InputsToPowerWordDict).forEach((keyName) => {
+      if (
+        !this.knownPowerWords[InputsToPowerWordDict[keyName as PowerWordInputs]]
+      ) {
+        return;
+      }
       const input = this.inputsManager.isInputEnabled(
         keyName as PowerWordInputs
       );
@@ -58,6 +61,14 @@ export class SpellManager {
 
   getCurrentMagicWord(): MagicWord | null {
     return this.currentMagicWord;
+  }
+
+  getCurrentSpellCast(): string {
+    return this.currentSpellCast;
+  }
+
+  setKnownPowerWords(powerWords: Partial<Record<PowerWord, boolean>>) {
+    this.knownPowerWords = powerWords;
   }
 
   clearCurrentSpell(): void {

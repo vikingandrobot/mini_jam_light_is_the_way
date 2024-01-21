@@ -1,6 +1,8 @@
 import { Spell } from "./spells";
 
 export class Light implements Spell {
+  readonly magicWord = "L";
+
   // ms
   totalDuration = 2000;
 

@@ -24,6 +24,7 @@ export const SpellBook: Record<string, MagicWord> = {
 
 export interface Spell {
   totalDuration: number;
+  magicWord: MagicWord;
   tick(deltaT: number): void;
   isOver(): boolean;
 }

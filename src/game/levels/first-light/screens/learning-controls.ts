@@ -1,51 +1,89 @@
+import { Level } from "@game/levels/types";
+import { ScreenId } from "./types";
 import { Renderer } from "@ui/renderer";
-import { Level, LevelId } from "../types";
-import { Input, InputsManager } from "@inputs/inputs-manager";
-import { Wizard, makeWizard, wizardLogic } from "@model/wizard";
 import { draw as drawWizard } from "@ui/wizard";
 import { draw as drawSky } from "@ui/sky";
 import { BasicRenderFunction } from "@ui/types";
+import { drawPowerWords } from "@ui/spells/power-words";
+import { Input, InputsManager } from "@inputs";
+import { Wizard, makeWizard, wizardLogic } from "@model/wizard";
 import { Position, Size } from "@model";
-import { SpellManager } from "src/spells";
+import { PowerWord, SpellManager } from "@spells";
+import { writeBottomInstructionText, writeTopInstructionText } from "@ui/text";
 
-export class FirstLightLevel implements Level {
-  public readonly id: LevelId = LevelId.FirstLight;
+const CONTROLS_TEXT =
+  "Press the [<] or [>] arrow keys to aim your staff. Press [w] to cast the Light spell";
 
-  private spellManager: SpellManager;
+const INSTRUCTION_TEST = "Press [SPACE] to continue";
+
+export class LearningControlsScreen implements Level<ScreenId> {
+  id = ScreenId.LearningControls;
+
+  private continue: boolean = false;
 
   private wizard: Wizard = makeWizard({ pos: [0, 0, 20], size: 1.8 });
 
   private groundPosition: Position = [0, 0, 20];
   private backgroundPosition: Position = [0, 0, 30];
 
+  private wasSpellCasted = false;
+
   constructor(
     private ctx: CanvasRenderingContext2D,
     private renderer: Renderer,
-    private inputsManager: InputsManager
-  ) {
-    this.spellManager = new SpellManager(inputsManager);
-  }
+    private inputsManager: InputsManager,
+    private spellManager: SpellManager
+  ) {}
 
   init() {
-    this.renderer.getCamera().centerCamera([0, 7, 0]);
+    this.spellManager.setKnownPowerWords({ [PowerWord.Light]: true });
   }
 
-  logic(deltaTInMs: number) {
+  isDone(): boolean {
+    return this.continue;
+  }
+
+  logic(deltaTInMs: number): void {
     this.actOnPlayerInputs();
     wizardLogic(this.wizard, this.spellManager, deltaTInMs);
 
     this.spellManager.clearCurrentSpell();
+
+    if (this.wizard.currentSpell) {
+      this.wasSpellCasted = true;
+    }
+
+    /**
+     * We wait for the first spell to finish before allowing to continue
+     */
+    if (this.wasSpellCasted && !this.wizard.currentSpell) {
+      if (this.inputsManager.isInputEnabled(Input.Space)) {
+        this.continue = true;
+      }
+    }
   }
 
-  render() {
+  render(): void {
     drawSky(this.ctx, this.renderer);
     drawBackground(this.ctx, this.renderer, this.backgroundPosition);
     drawWizard(this.ctx, this.renderer, this.wizard);
     drawGround(this.ctx, this.renderer, this.groundPosition);
-  }
 
-  isDone() {
-    return false;
+    if (!this.wasSpellCasted || this.wizard.currentSpell) {
+      drawPowerWords(this.ctx, this.renderer, {
+        numberOfSlots: 5,
+        currentSpellCast:
+          this.wizard.currentSpell?.magicWord ??
+          this.spellManager.getCurrentSpellCast(),
+        isCasted: !!this.wizard.currentSpell,
+      });
+    }
+
+    writeTopInstructionText(CONTROLS_TEXT);
+
+    if (this.wasSpellCasted && !this.wizard.currentSpell) {
+      writeBottomInstructionText(INSTRUCTION_TEST);
+    }
   }
 
   private actOnPlayerInputs() {

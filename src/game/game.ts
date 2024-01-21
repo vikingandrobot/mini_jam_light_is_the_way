@@ -5,7 +5,7 @@ import { draw as drawWizard } from "@ui/wizard";
 import { Size } from "@model";
 import { InputsManager } from "@inputs/inputs-manager";
 import { Level, LevelId } from "./levels/types";
-import { FirstLightLevel } from "./levels/first-light.ts";
+import { FirstLightLevel } from "./levels/first-light";
 
 const DELTA_T = 0.0166; // 1/25 second
 const DELTA_T_IN_MS = 16.6;
@@ -98,8 +98,8 @@ export class Game {
       ),
     };
 
-    // this.currentLevel = this.levels[LevelId.FirstLight] ?? null;
-    // this.currentLevel?.init();
+    this.currentLevel = this.levels[LevelId.FirstLight] ?? null;
+    this.currentLevel?.init();
   }
 
   private isCurrentLevelDone(): boolean {

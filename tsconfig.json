@@ -1,5 +1,5 @@
 {
-  "include": ["./index.ts", "./src/**/*.ts"],
+  "include": ["./index.ts", "./src/**/*.ts", "src/game/levels/first-light"],
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {

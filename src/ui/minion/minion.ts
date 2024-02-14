@@ -1,8 +1,17 @@
 import { Minion } from "@model/minion";
 import { Renderer, distanceFromTwoPoints } from "@ui/renderer";
 import { EntityRenderer } from "@ui/types";
+import { ShadowParticleAnimation } from "./shadow-particles-animation";
 
 export class MinionRenderer implements EntityRenderer<Minion> {
+  private particleAnimation = new ShadowParticleAnimation(
+    {
+      initialState: { particles: [] },
+      length: 0,
+    },
+    this.minion
+  );
+
   constructor(private minion: Minion) {}
 
   render(ctx: CanvasRenderingContext2D, renderer: Renderer) {
@@ -31,6 +40,9 @@ export class MinionRenderer implements EntityRenderer<Minion> {
     ctx.translate(x, y);
 
     ctx.save();
+
+    this.particleAnimation.tick();
+    this.particleAnimation.renderFrame(ctx, renderer);
 
     ctx.scale(1, this.minion.size[1] / this.minion.size[0]);
 

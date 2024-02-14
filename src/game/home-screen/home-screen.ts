@@ -7,6 +7,8 @@ import { Position } from "@model";
 import { LightOrb, makeLightOrb } from "@model/light-orb";
 import { BasicRenderFunction } from "@ui/types";
 import { Input, InputsManager } from "@inputs";
+import { Minion } from "@model/minion";
+import { MinionRenderer } from "@ui/minion";
 
 const GAME_TITLE = "A Light in the Dark";
 const START_LABEL = "Press the [SPACE] key to start";
@@ -33,6 +35,8 @@ export class HomeScreen {
   private orb: LightOrb = makeLightOrb([-5, 7, 10], 1);
   private orbDirection = 1;
   private orbRenderer = new LightOrbRenderer(this.orb);
+  private minion = new Minion([0, 7, 10], [3, 2]);
+  private minionRenderer = new MinionRenderer(this.minion);
 
   private done: boolean = false;
 
@@ -59,6 +63,7 @@ export class HomeScreen {
     drawWizard(this.ctx, this.renderer, this.wizard);
     drawGround(this.ctx, this.renderer, this.groundPosition);
     drawStartLabel(this.ctx, this.renderer, this.startLabel);
+    this.minionRenderer.render(this.ctx, this.renderer);
   }
 
   logic() {
